@@ -1,17 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../assets/css/header.css";
 import Dropdown from "./Dropdown";
 import { useState } from "react";
 import avatar from "../assets/images/avatar-1.jpg";
+import { clearCookie } from "../utils/utils";
 
 const Header = () => {
   const [isDrop, setIsDrop] = useState(false);
   const [isDropUser, setIsDropUser] = useState(false);
+  const navigate = useNavigate();
   const handleDropdown = () => {
     setIsDrop(!isDrop);
   };
   const handleDropdownUser = () => {
     setIsDropUser(!isDropUser);
+  };
+  const handleLogout = () => {
+    clearCookie();
+    navigate("/auth/login");
   };
   return (
     <div className="header">
@@ -47,7 +53,9 @@ const Header = () => {
         </div>
         {isDropUser && (
           <Dropdown handleDropdown={handleDropdownUser} style={{ right: 0 }}>
-            <button className="dropdown__item">Đăng xuất</button>
+            <button className="dropdown__item" onClick={handleLogout}>
+              Đăng xuất
+            </button>
           </Dropdown>
         )}
       </div>

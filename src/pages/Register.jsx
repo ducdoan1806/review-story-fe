@@ -41,6 +41,9 @@ const Register = () => {
           placeholder="Nhập tên"
           onChange={handleRegister}
           value={register.name}
+          onKeyDown={(e) => {
+            e.key === "Enter" && handleClickRegister();
+          }}
         />
       </div>
       <div className="register__inputGroup">
@@ -52,6 +55,9 @@ const Register = () => {
           placeholder="Nhập địa chỉ email"
           value={register.email}
           onChange={handleRegister}
+          onKeyDown={(e) => {
+            e.key === "Enter" && handleClickRegister();
+          }}
         />
       </div>
       <div className="register__inputGroup">
@@ -63,6 +69,9 @@ const Register = () => {
           placeholder="Nhập mật khẩu"
           onChange={handleRegister}
           value={register.password}
+          onKeyDown={(e) => {
+            e.key === "Enter" && handleClickRegister();
+          }}
         />
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}

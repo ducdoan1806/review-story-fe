@@ -29,5 +29,12 @@ export const getCookie = (name) => {
       cookieStr = item.split("=")[1];
     }
   });
-  return cookieStr;
+
+  return cookieStr.trim();
+};
+export const clearCookie = () => {
+  document.cookie.split(";").forEach((cookie) => {
+    document.cookie =
+      cookie.split("=")[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+  });
 };
