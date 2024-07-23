@@ -26,7 +26,7 @@ const Header = () => {
               }}
               className="dropdown__item"
             >
-              + Thêm mới ảnh
+              + Dự án hình ảnh
             </Link>
             <Link
               to={"/"}
@@ -35,7 +35,7 @@ const Header = () => {
                 setIsDrop(false);
               }}
             >
-              + Thêm mới video
+              + Dự án video
             </Link>
           </Dropdown>
         )}

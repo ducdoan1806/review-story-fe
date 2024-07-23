@@ -1,0 +1,20 @@
+.modal {
+  @apply fixed top-0 left-0 bottom-0 right-0 z-50;
+  background: rgba(0, 0, 0, 0.4);
+}
+.modal__box {
+  @apply mt-7 mx-auto bg-white rounded;
+  max-width: 500px;
+  width: 90%;
+}
+.modal__header {
+  @apply flex p-4 font-semibold text-lg justify-between;
+  border-bottom: 1px solid #dee2e6;
+  color: #495057;
+  button {
+    font-size: 14px;
+  }
+}
+.modal__body {
+  @apply p-4;
+}

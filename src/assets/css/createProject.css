@@ -1,0 +1,24 @@
+.createProject__inputGroup {
+  @apply mb-4;
+  label {
+    @apply font-semibold mb-2 block;
+  }
+  input {
+    @apply w-full py-2 px-5 text-sm;
+    border-radius: 3px;
+    border: 1px solid #ced4da;
+    outline: none;
+    background: #fff;
+  }
+}
+.createProject__addBtn {
+  @apply py-2 px-5 rounded block w-fit ml-auto;
+  color: #fff;
+  background-color: #06d2eb;
+  border-color: #06d2eb;
+  transition: all 0.2s linear;
+  &:hover {
+    background-color: #05b1c6;
+    border-color: #05a6b9;
+  }
+}
