@@ -1,0 +1,31 @@
+.register {
+  @apply p-2;
+  button {
+    @apply w-full px-5 py-2 my-6;
+    border-radius: 3px;
+    color: #fff;
+    background-color: #6d61ea;
+    border-color: #6d61ea;
+    transition: all 0.2s linear;
+    &:hover {
+      background-color: #4e3fe6;
+      border-color: #4334e4;
+    }
+  }
+  p {
+    text-align: center;
+  }
+}
+.register__inputGroup {
+  @apply mb-4;
+  label {
+    @apply font-semibold mb-2 block;
+  }
+  input {
+    @apply w-full py-2 px-5 text-sm;
+    border-radius: 3px;
+    border: 1px solid #ced4da;
+    outline: none;
+    background: #fff;
+  }
+}

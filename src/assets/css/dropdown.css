@@ -1,0 +1,17 @@
+.dropdown {
+  @apply rounded py-2;
+  position: absolute;
+
+  background: #fff;
+  z-index: 10;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.11);
+}
+.dropdown__item {
+  @apply text-nowrap;
+  padding: 0.4rem 1.2rem;
+  display: block;
+  &:hover {
+    background-color: #f8f9fa;
+    color: #000;
+  }
+}

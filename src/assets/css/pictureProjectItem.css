@@ -1,0 +1,16 @@
+.editTableBtn {
+  @apply text-base w-10 h-10 rounded-full;
+  color: #fe9f45;
+  transition: all 0.2s linear;
+  &:hover {
+    background: #f1f1f1;
+  }
+}
+.deleteTableBtn {
+  @apply text-base w-10 h-10 rounded-full;
+  color: #ee5455;
+  transition: all 0.2s linear;
+  &:hover {
+    background: #f1f1f1;
+  }
+}

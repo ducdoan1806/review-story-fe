@@ -1,0 +1,22 @@
+.header {
+  @apply rounded-lg flex justify-between items-center;
+  background: #fff;
+  box-shadow: var(--box-shadow);
+}
+.header__newProject {
+  position: relative;
+  button {
+    padding: 0.5rem 0.8rem;
+  }
+}
+.header__user {
+  @apply flex items-center gap-2 relative;
+  cursor: pointer;
+  padding: 0.5rem 0.8rem;
+  img {
+    border-radius: 50%;
+    width: 36px;
+    height: auto;
+    padding: 4px;
+  }
+}

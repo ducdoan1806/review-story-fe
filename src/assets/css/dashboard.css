@@ -1,0 +1,21 @@
+.dashboard {
+  @apply flex flex-col flex-1 gap-3;
+}
+.dashboard__box {
+  @apply p-5 relative flex-1 bg-white rounded;
+  box-shadow: var(--box-shadow);
+  span {
+    @apply uppercase font-semibold text-sm;
+    color: #6c757d;
+  }
+  p {
+    @apply my-3 font-semibold text-2xl;
+    color: #495057;
+  }
+}
+.dashboard__icon {
+  @apply text-xl rounded-full absolute w-12 h-12 flex justify-center items-center right-4 top-1/4;
+
+  color: #6d61ea;
+  background-color: rgba(109, 97, 234, 0.18);
+}

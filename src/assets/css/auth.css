@@ -1,0 +1,18 @@
+.auth {
+  @apply flex justify-center items-center overflow-auto w-full;
+  background: #6d61ea;
+  height: 100vh;
+}
+.auth__box {
+  @apply p-5 rounded-md;
+  background: #fff;
+  max-width: 450px;
+  width: 90%;
+}
+.auth__img {
+  @apply mt-4 mb-6 text-center mx-auto w-fit;
+  img {
+    width: 139px;
+    height: auto;
+  }
+}

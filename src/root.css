@@ -1,0 +1,8 @@
+:root {
+  --box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.1);
+}
+body {
+  @apply text-sm;
+  color: #747a80;
+  background: #f8f8f8;
+}
