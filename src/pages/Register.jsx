@@ -1,6 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../assets/css/register.css";
+import { useState } from "react";
+import http from "../app/http";
+import Loading from "../components/Loading";
 const Register = () => {
+  const [register, setRegister] = useState({
+    email: "",
+    name: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleRegister = (e) => {
+    setRegister({ ...register, [e.target.name]: e.target.value });
+  };
+  const handleClickRegister = async () => {
+    setLoading(true);
+    try {
+      const res = await http.post("register", JSON.stringify(register));
+      if (res?.data?.message === "User registered successfully") {
+        navigate("/auth/login");
+      } else {
+        setError("Lỗi");
+      }
+      setLoading(false);
+    } catch (e) {
+      setError(e?.response?.data?.error);
+      setLoading(false);
+    }
+  };
   return (
     <div className="register">
       <div className="register__inputGroup">
@@ -8,8 +37,10 @@ const Register = () => {
         <input
           type="text"
           id="name"
+          name="name"
           placeholder="Nhập tên"
-          autoComplete={false}
+          onChange={handleRegister}
+          value={register.name}
         />
       </div>
       <div className="register__inputGroup">
@@ -17,8 +48,10 @@ const Register = () => {
         <input
           type="email"
           id="email"
+          name="email"
           placeholder="Nhập địa chỉ email"
-          autoComplete={false}
+          value={register.email}
+          onChange={handleRegister}
         />
       </div>
       <div className="register__inputGroup">
@@ -26,11 +59,22 @@ const Register = () => {
         <input
           type="password"
           id="password"
+          name="password"
           placeholder="Nhập mật khẩu"
-          autoComplete={false}
+          onChange={handleRegister}
+          value={register.password}
         />
       </div>
-      <button type="submit"> Đăng nhập</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button onClick={!loading && handleClickRegister}>
+        {loading ? (
+          <div className="flex justify-center">
+            <Loading />
+          </div>
+        ) : (
+          "Đăng ký"
+        )}
+      </button>
       <p>
         Bạn đã có tài khoản ?
         <Link to={"/auth/login"}>

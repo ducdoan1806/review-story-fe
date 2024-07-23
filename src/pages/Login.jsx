@@ -5,21 +5,11 @@ const Login = () => {
     <div className="login">
       <div className="login__inputGroup">
         <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          placeholder="Nhập địa chỉ email"
-          autoComplete={false}
-        />
+        <input type="email" id="email" placeholder="Nhập địa chỉ email" />
       </div>
       <div className="login__inputGroup">
         <label htmlFor="password">Mật khẩu</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="Nhập mật khẩu"
-          autoComplete={false}
-        />
+        <input type="password" id="password" placeholder="Nhập mật khẩu" />
       </div>
       <button type="submit"> Đăng nhập</button>
       <p>
