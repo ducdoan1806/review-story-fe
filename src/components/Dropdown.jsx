@@ -12,7 +12,7 @@ const Dropdown = ({ children, style, handleDropdown }) => {
   );
 };
 Dropdown.propTypes = {
-  children: PropTypes.func,
+  children: PropTypes.node,
   style: PropTypes.object,
   handleDropdown: PropTypes.func,
 };

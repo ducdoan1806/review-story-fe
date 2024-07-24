@@ -17,6 +17,7 @@ const DetailImageProject = () => {
     setImages(updatedFiles);
     setPreviewImages(updatedPreviews);
   };
+
   return (
     <div className="detailImageProject flex flex-col gap-3">
       <div className="text-lg font-semibold">Dự án 1</div>
