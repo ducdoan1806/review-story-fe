@@ -1,5 +1,5 @@
 .editTableBtn {
-  @apply text-base w-10 h-10 rounded-full;
+  @apply text-base w-10 h-10 rounded-full flex justify-center items-center;
   color: #fe9f45;
   transition: all 0.2s linear;
   &:hover {

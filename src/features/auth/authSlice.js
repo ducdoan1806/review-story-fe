@@ -18,7 +18,7 @@ const authSlice = createSlice({
       state.loaded = true;
       state.loading = false;
       setCookie({
-        value: "Bearer " + action.payload?.access_token,
+        value: action.payload?.full_token,
         expires: action.payload?.expires_in,
       });
       state.error = null;

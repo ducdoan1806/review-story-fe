@@ -6,6 +6,7 @@ import Home from "./layouts/Home";
 import Dashboard from "./pages/Dashboard";
 import ImageProject from "./pages/ImageProject";
 import ProtectedRoute from "./components/ProtectedRoute";
+import DetailImageProject from "./pages/DetailImageProject";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       >
         <Route path="/" element={<Dashboard />} />
         <Route path="/picture-project" element={<ImageProject />} />
+        <Route path="/picture-project/:id" element={<DetailImageProject />} />
       </Route>
       <Route path="/auth" element={<Auth />}>
         <Route path="/auth/login" element={<Login />} />

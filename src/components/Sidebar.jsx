@@ -17,13 +17,13 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to={"#"}>
-            <FontAwesomeIcon icon={faImage} /> <span>Chức năng 1</span>
+          <Link to={"/picture-project"}>
+            <FontAwesomeIcon icon={faImage} /> <span>Dự án hình ảnh</span>
           </Link>
         </li>
         <li>
           <Link to={"#"}>
-            <FontAwesomeIcon icon={faVideo} /> <span>Chức năng 2</span>
+            <FontAwesomeIcon icon={faVideo} /> <span>Dự án video</span>
           </Link>
         </li>
       </ul>

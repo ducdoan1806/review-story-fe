@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../assets/css/pictureProjectItem.css";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const PictureProjectItem = () => {
   return (
@@ -10,9 +11,9 @@ const PictureProjectItem = () => {
       <td>Mô tả</td>
       <td>
         <div className="flex gap-2 justify-end">
-          <button className="editTableBtn">
+          <Link to={"/picture-project/1"} className="editTableBtn">
             <FontAwesomeIcon icon={faPen} />
-          </button>
+          </Link>
           <button className="deleteTableBtn">
             <FontAwesomeIcon icon={faTrash} />
           </button>
