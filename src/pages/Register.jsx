@@ -75,7 +75,7 @@ const Register = () => {
         />
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <button onClick={!loading && handleClickRegister}>
+      <button onClick={!loading ? handleClickRegister : () => {}}>
         {loading ? (
           <div className="flex justify-center">
             <Loading />

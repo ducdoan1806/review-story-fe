@@ -4,12 +4,15 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginApi } from "../features/auth/authApi";
 import { isAuthenticated } from "../utils/utils";
+import Loading from "../components/Loading";
 const Login = () => {
   const dispatch = useDispatch();
   const [info, setInfo] = useState({ email: "", password: "" });
-  const { error: authError, loaded: loadedAuth } = useSelector(
-    (state) => state.auth
-  );
+  const {
+    error: authError,
+    loaded: loadedAuth,
+    loading,
+  } = useSelector((state) => state.auth);
   const handleInfo = (e) => {
     setInfo({ ...info, [e.target.name]: e.target.value });
   };
@@ -50,7 +53,16 @@ const Login = () => {
         />
       </div>
       {authError && <p style={{ color: "red" }}>{authError}</p>}
-      <button onClick={handleLogin}> Đăng nhập</button>
+
+      <button onClick={!loading ? handleLogin : () => {}}>
+        {loading ? (
+          <div className="flex justify-center">
+            <Loading />
+          </div>
+        ) : (
+          "Đăng nhập"
+        )}
+      </button>
       <p>
         Bạn chưa có tài khoản ?
         <Link to={"/auth/register"}>

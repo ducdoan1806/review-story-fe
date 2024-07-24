@@ -3,16 +3,27 @@ import "../assets/css/detailImageProject.css";
 import { useDispatch, useSelector } from "react-redux";
 import { detailProjectImgApi } from "../features/projectImg/api";
 import { useLocation } from "react-router-dom";
+import { getLanguage } from "../features/translation/api";
 
 const DetailImageProject = () => {
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+  const [selectLang, setSelectLang] = useState({
+    slText: "en",
+    slTranslate: "vi",
+  });
   const location = useLocation();
   const projectId =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
   const { currentProject } = useSelector((state) => state.projectDetailImg);
+  const { languages, loaded: loadedLanguages } = useSelector(
+    (state) => state.language
+  );
 
   const dispatch = useDispatch();
+  const handleChangeLang = (e) => {
+    setSelectLang({ ...selectLang, [e.target.name]: e.target.value });
+  };
   const handleChangeImages = (e) => {
     const files = Array.from(e.target.files);
     setImages(files);
@@ -28,6 +39,9 @@ const DetailImageProject = () => {
   useEffect(() => {
     dispatch(detailProjectImgApi(projectId));
   }, [dispatch, projectId]);
+  useEffect(() => {
+    dispatch(getLanguage());
+  }, [dispatch]);
   return (
     <div className="detailImageProject flex flex-col gap-3">
       <div>
@@ -70,18 +84,17 @@ const DetailImageProject = () => {
         <div className="detailImageProject__box">
           <div className="detailImageProject__input">
             <label htmlFor="text">Nhập nội dung text:</label>
-            <select name="slText">
-              <option>English</option>
-              <optgroup label="Alaskan/Hawaiian Time Zone">
-                <option value="AK">Alaska</option>
-                <option value="HI">Hawaii</option>
-              </optgroup>
-              <optgroup label="Pacific Time Zone">
-                <option value="CA">California</option>
-                <option value="NV">Nevada</option>
-                <option value="OR">Oregon</option>
-                <option value="WA">Washington</option>
-              </optgroup>
+            <select
+              name="slText"
+              value={selectLang.slText}
+              onChange={handleChangeLang}
+            >
+              {loadedLanguages &&
+                languages.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.language}
+                  </option>
+                ))}
             </select>
             <textarea name="text" id="text" rows={5}></textarea>
           </div>
@@ -89,18 +102,17 @@ const DetailImageProject = () => {
         <div className="detailImageProject__box">
           <div className="detailImageProject__input">
             <label htmlFor="translate">Nội dung translate text:</label>
-            <select name="slTranslate">
-              <option>English</option>
-              <optgroup label="Alaskan/Hawaiian Time Zone">
-                <option value="AK">Alaska</option>
-                <option value="HI">Hawaii</option>
-              </optgroup>
-              <optgroup label="Pacific Time Zone">
-                <option value="CA">California</option>
-                <option value="NV">Nevada</option>
-                <option value="OR">Oregon</option>
-                <option value="WA">Washington</option>
-              </optgroup>
+            <select
+              name="slTranslate"
+              value={selectLang.slTranslate}
+              onChange={handleChangeLang}
+            >
+              {loadedLanguages &&
+                languages.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.language}
+                  </option>
+                ))}
             </select>
             <textarea name="translate" id="translate" rows={5}></textarea>
           </div>
