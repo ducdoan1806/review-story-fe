@@ -18,7 +18,7 @@ const Modal = ({ children, title, handleOpen }) => {
   );
 };
 Modal.propTypes = {
-  children: PropTypes.func,
+  children: PropTypes.node,
   title: PropTypes.string,
   handleOpen: PropTypes.func,
 };

@@ -38,3 +38,7 @@ export const clearCookie = () => {
       cookie.split("=")[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
   });
 };
+export const formatDate = (date) => {
+  if (!(date instanceof Date) || isNaN(date)) return date;
+  return date.toISOString().split("T")[0];
+};
