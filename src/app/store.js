@@ -5,6 +5,7 @@ import userReducer from "../features/auth/userSlice";
 import projectImgReducer from "../features/projectImg/projectImgSlice";
 import projectDetailImgReducer from "../features/projectImg/detailProjectSlice";
 import languageReducer from "../features/translation/languageSlice";
+import translationReducer from "../features/translation/translateSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   projectImg: projectImgReducer,
   projectDetailImg: projectDetailImgReducer,
   language: languageReducer,
+  translation: translationReducer,
 });
 const store = configureStore({
   reducer: rootReducer,

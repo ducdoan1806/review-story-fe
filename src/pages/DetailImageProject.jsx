@@ -3,7 +3,8 @@ import "../assets/css/detailImageProject.css";
 import { useDispatch, useSelector } from "react-redux";
 import { detailProjectImgApi } from "../features/projectImg/api";
 import { useLocation } from "react-router-dom";
-import { getLanguage } from "../features/translation/api";
+import { getLanguage, translateApi } from "../features/translation/api";
+import { useDebounced } from "../utils/utils";
 
 const DetailImageProject = () => {
   const [images, setImages] = useState([]);
@@ -16,10 +17,24 @@ const DetailImageProject = () => {
   const projectId =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
   const { currentProject } = useSelector((state) => state.projectDetailImg);
+  const { result: output } = useSelector((state) => state.translation);
+
   const { languages, loaded: loadedLanguages } = useSelector(
     (state) => state.language
   );
-
+  const inputDebounced = useDebounced((input) => {
+    dispatch(
+      translateApi({
+        text: input,
+        from: selectLang.slText,
+        lang: selectLang.slTranslate,
+        project_id: currentProject?.id,
+      })
+    );
+  }, 5000);
+  const handleChangeInput = (e) => {
+    inputDebounced(e.target.value);
+  };
   const dispatch = useDispatch();
   const handleChangeLang = (e) => {
     setSelectLang({ ...selectLang, [e.target.name]: e.target.value });
@@ -96,7 +111,12 @@ const DetailImageProject = () => {
                   </option>
                 ))}
             </select>
-            <textarea name="text" id="text" rows={5}></textarea>
+            <textarea
+              name="text"
+              id="text"
+              rows={5}
+              onChange={handleChangeInput}
+            ></textarea>
           </div>
         </div>
         <div className="detailImageProject__box">
@@ -114,7 +134,12 @@ const DetailImageProject = () => {
                   </option>
                 ))}
             </select>
-            <textarea name="translate" id="translate" rows={5}></textarea>
+            <textarea
+              name="translate"
+              id="translate"
+              rows={5}
+              defaultValue={output?.translated_text ?? ""}
+            ></textarea>
           </div>
         </div>
       </div>
