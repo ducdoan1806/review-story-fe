@@ -42,3 +42,14 @@ export const detailProjectImgApi = (id) => async (dispatch) => {
     dispatch(projectDetailImgAction.getCurrentProjectFail(e?.response?.data));
   }
 };
+export const deleteProjectImgApi = (id) => async (dispatch) => {
+  dispatch(projectImgAction.deleteProjectImg());
+  try {
+    await http.delete(`projects/${id}`, {
+      headers: { Authorization: getCookie("authToken") },
+    });
+    dispatch(projectImgAction.deleteProjectImgSuccess(id));
+  } catch (e) {
+    dispatch(projectImgAction.deleteProjectImgFail(e?.response?.data));
+  }
+};

@@ -6,9 +6,15 @@ import { Link } from "react-router-dom";
 import { formatDate } from "../utils/utils";
 import Modal from "./Modal";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { deleteProjectImgApi } from "../features/projectImg/api";
 
 const PictureProjectItem = ({ idx, id, title, description, created_at }) => {
   const [del, setDel] = useState(false);
+  const dispatch = useDispatch();
+  const hanldeClickDel = () => {
+    dispatch(deleteProjectImgApi(id));
+  };
   return (
     <tr>
       <td>{idx + 1}</td>
@@ -29,24 +35,28 @@ const PictureProjectItem = ({ idx, id, title, description, created_at }) => {
             <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
+        {del && (
+          <Modal
+            title="Thông báo"
+            handleOpen={() => {
+              setDel(!del);
+            }}
+          >
+            <div className="text-center">
+              <p className="text-center text-base mb-5">
+                Bạn có muốn dự án <b className="text-red-400">{title || ""}</b>{" "}
+                không ?
+              </p>
+              <button
+                className="px-3 py-2 text-white bg-red-500 rounded"
+                onClick={hanldeClickDel}
+              >
+                Xóa dự án
+              </button>
+            </div>
+          </Modal>
+        )}
       </td>
-      {del && (
-        <Modal
-          title="Thông báo"
-          handleOpen={() => {
-            setDel(!del);
-          }}
-        >
-          <div className="text-center">
-            <p className="text-center text-base mb-5">
-              Bạn có muốn dự án này không ?
-            </p>
-            <button className="px-3 py-2 text-white bg-red-500 rounded">
-              Xóa dự án
-            </button>
-          </div>
-        </Modal>
-      )}
     </tr>
   );
 };

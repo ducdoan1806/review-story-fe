@@ -44,9 +44,24 @@ const projectImgSlice = createSlice({
     createProjectImgSuccess: (state, action) => {
       state.loading = false;
       state.projectList.unshift(action.payload);
+      state.count += 1;
       state.error = null;
     },
     createProjectImgFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    deleteProjectImg: (state) => {
+      state.loading = true;
+    },
+    deleteProjectImgSuccess: (state, action) => {
+      state.loading = false;
+      state.projectList = state.projectList.filter(
+        (item) => item.id !== action.payload
+      );
+      state.error = null;
+    },
+    deleteProjectImgFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
