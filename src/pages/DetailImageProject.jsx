@@ -9,6 +9,7 @@ import { useDebounced } from "../utils/utils";
 const DetailImageProject = () => {
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+  const [input, setInput] = useState("");
   const [selectLang, setSelectLang] = useState({
     slText: "en",
     slTranslate: "vi",
@@ -23,15 +24,8 @@ const DetailImageProject = () => {
     (state) => state.language
   );
   const inputDebounced = useDebounced((input) => {
-    dispatch(
-      translateApi({
-        text: input,
-        from: selectLang.slText,
-        lang: selectLang.slTranslate,
-        project_id: currentProject?.id,
-      })
-    );
-  }, 5000);
+    setInput(input);
+  }, 500);
   const handleChangeInput = (e) => {
     inputDebounced(e.target.value);
   };
@@ -57,6 +51,22 @@ const DetailImageProject = () => {
   useEffect(() => {
     dispatch(getLanguage());
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(
+      translateApi({
+        text: input,
+        from: selectLang.slText,
+        lang: selectLang.slTranslate,
+        project_id: currentProject?.id,
+      })
+    );
+  }, [
+    dispatch,
+    currentProject?.id,
+    input,
+    selectLang.slText,
+    selectLang.slTranslate,
+  ]);
   return (
     <div className="detailImageProject flex flex-col gap-3">
       <div>
