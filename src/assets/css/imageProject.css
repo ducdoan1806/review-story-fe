@@ -5,7 +5,7 @@
   @apply p-5 relative flex-1 bg-white rounded;
   box-shadow: var(--box-shadow);
   table {
-    @apply w-full mt-3 border-collapse;
+    @apply w-full border-collapse;
     tr {
       td,
       th {
@@ -16,8 +16,18 @@
     }
   }
 }
+.imageProject__control {
+  @apply flex justify-between items-center;
+  input {
+    @apply px-3 py-1 text-sm;
+    border-radius: 3px;
+    border: 1px solid #ced4da;
+    outline: none;
+    background: #fff;
+  }
+}
 .imageProject__create {
-  @apply py-2 px-5 rounded block w-fit ml-auto;
+  @apply py-2 px-5 rounded;
   color: #fff;
   background-color: #06d2eb;
   border-color: #06d2eb;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 export const useOutside = (ref, func) => {
   useEffect(() => {
@@ -41,4 +41,21 @@ export const clearCookie = () => {
 export const formatDate = (date) => {
   if (!(date instanceof Date) || isNaN(date)) return date;
   return date.toISOString().split("T")[0];
+};
+export const useDebounced = (callback, delay) => {
+  const timeoutRef = useRef(null);
+
+  const debouncedCallback = useCallback(
+    (...args) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        callback(...args);
+      }, delay);
+    },
+    [callback, delay]
+  );
+
+  return debouncedCallback;
 };

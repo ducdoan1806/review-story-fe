@@ -5,19 +5,32 @@ const initialState = {
   loading: false,
   projectList: [],
   error: null,
+  page: 1,
+  pageSize: 20,
+  search: "",
+  count: 0,
 };
 const projectImgSlice = createSlice({
   name: "projectImg",
   initialState,
   reducers: {
+    updatePagination(state, action) {
+      state.page = action.payload.page;
+      state.pageSize = action.payload.pageSize;
+    },
+    setSearchQuery(state, action) {
+      state.search = action.payload.search;
+      state.page = 1; // Reset page on search
+    },
     getProjectImg: (state) => {
       state.loading = true;
     },
     getProjectImgSuccess: (state, action) => {
       state.loaded = true;
       state.loading = false;
-      state.projectList = action.payload?.items;
-      state.projectList.reverse();
+      state.count = action.payload.count;
+      if (state.page === 1) state.projectList = action.payload.items;
+      else state.projectList = [...state.projectList, ...action.payload.items];
       state.error = null;
     },
     getProjectImgFail: (state, action) => {

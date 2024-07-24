@@ -4,8 +4,11 @@ import "../assets/css/pictureProjectItem.css";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { formatDate } from "../utils/utils";
+import Modal from "./Modal";
+import { useState } from "react";
 
-const PictureProjectItem = ({ idx, title, description, created_at }) => {
+const PictureProjectItem = ({ idx, id, title, description, created_at }) => {
+  const [del, setDel] = useState(false);
   return (
     <tr>
       <td>{idx + 1}</td>
@@ -14,19 +17,42 @@ const PictureProjectItem = ({ idx, title, description, created_at }) => {
       <td>{formatDate(new Date(created_at)) || "--"}</td>
       <td>
         <div className="flex gap-2 justify-end">
-          <Link to={"/picture-project/1"} className="editTableBtn">
+          <Link to={`/picture-project/${id}`} className="editTableBtn">
             <FontAwesomeIcon icon={faPen} />
           </Link>
-          <button className="deleteTableBtn">
+          <button
+            className="deleteTableBtn"
+            onClick={() => {
+              setDel(true);
+            }}
+          >
             <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
       </td>
+      {del && (
+        <Modal
+          title="Thông báo"
+          handleOpen={() => {
+            setDel(!del);
+          }}
+        >
+          <div className="text-center">
+            <p className="text-center text-base mb-5">
+              Bạn có muốn dự án này không ?
+            </p>
+            <button className="px-3 py-2 text-white bg-red-500 rounded">
+              Xóa dự án
+            </button>
+          </div>
+        </Modal>
+      )}
     </tr>
   );
 };
 PictureProjectItem.propTypes = {
   idx: PropTypes.number,
+  id: PropTypes.number,
   title: PropTypes.string,
   description: PropTypes.string,
   created_at: PropTypes.string,

@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../assets/css/detailImageProject.css";
+import { useDispatch, useSelector } from "react-redux";
+import { detailProjectImgApi } from "../features/projectImg/api";
+import { useLocation } from "react-router-dom";
 
 const DetailImageProject = () => {
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
+  const location = useLocation();
+  const projectId =
+    location.pathname.split("/")[location.pathname.split("/").length - 1];
+  const { currentProject } = useSelector((state) => state.projectDetailImg);
 
+  const dispatch = useDispatch();
   const handleChangeImages = (e) => {
     const files = Array.from(e.target.files);
     setImages(files);
@@ -17,10 +25,19 @@ const DetailImageProject = () => {
     setImages(updatedFiles);
     setPreviewImages(updatedPreviews);
   };
-
+  useEffect(() => {
+    dispatch(detailProjectImgApi(projectId));
+  }, [dispatch, projectId]);
   return (
     <div className="detailImageProject flex flex-col gap-3">
-      <div className="text-lg font-semibold">Dự án 1</div>
+      <div>
+        <span className="text-lg font-semibold mb-1 block">
+          {currentProject?.title || "--"}
+        </span>
+        {currentProject?.description && (
+          <p>{currentProject?.description || "--"}</p>
+        )}
+      </div>
       <div className="detailImageProject__box">
         <div className="text-base mb-3 font-semibold">Tải ảnh:</div>
         <input
