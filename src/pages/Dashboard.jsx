@@ -17,14 +17,14 @@ const Dashboard = () => {
       <div className="text-lg font-semibold">Trang chủ</div>
       <div className="flex gap-3">
         <div className="dashboard__box">
-          <span>DỰ ÁN CHỨC NĂNG 1</span>
+          <span>DỰ ÁN HÌNH ẢNH</span>
           <p>{imgProjectCount || 0}</p>
           <div className="dashboard__icon">
             <FontAwesomeIcon icon={faImage} />
           </div>
         </div>
         <div className="dashboard__box">
-          <span>DỰ ÁN CHỨC NĂNG 1</span>
+          <span>DỰ ÁN VIDEO</span>
           <p>3</p>
           <div className="dashboard__icon">
             <FontAwesomeIcon icon={faVideo} />

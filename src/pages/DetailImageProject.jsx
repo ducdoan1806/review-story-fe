@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import "../assets/css/detailImageProject.css";
 import { useDispatch, useSelector } from "react-redux";
-import { detailProjectImgApi } from "../features/projectImg/api";
+import {
+  createContentAndImage,
+  detailProjectImgApi,
+} from "../features/projectImg/api";
 import { useLocation } from "react-router-dom";
 import { getLanguage, translateApi } from "../features/translation/api";
 import { useDebounced } from "../utils/utils";
+import AudioPlayer from "../components/AudioPlayer";
 
 const DetailImageProject = () => {
   const [images, setImages] = useState([]);
@@ -18,14 +22,25 @@ const DetailImageProject = () => {
   const projectId =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
   const { currentProject } = useSelector((state) => state.projectDetailImg);
-  const { result: output } = useSelector((state) => state.translation);
+  const { result: output, loading: translationLoading } = useSelector(
+    (state) => state.translation
+  );
 
   const { languages, loaded: loadedLanguages } = useSelector(
     (state) => state.language
   );
+
   const inputDebounced = useDebounced((input) => {
-    setInput(input);
-  }, 500);
+    setInput(input.trim());
+    dispatch(
+      translateApi({
+        text: input.trim() || "",
+        from: selectLang.slText,
+        lang: selectLang.slTranslate,
+        project_id: currentProject?.id,
+      })
+    );
+  }, 700);
   const handleChangeInput = (e) => {
     inputDebounced(e.target.value);
   };
@@ -45,28 +60,31 @@ const DetailImageProject = () => {
     setImages(updatedFiles);
     setPreviewImages(updatedPreviews);
   };
+  const handleClickSave = () => {
+    const inputArr = input.split(" // ");
+    const outputArr = output?.translated_text.split(" // ");
+    if (input && output && selectLang?.slText && selectLang?.slTranslate)
+      dispatch(
+        createContentAndImage({
+          project_id: currentProject?.id,
+          images,
+          contents: inputArr.map((item, idx) => ({
+            text: item.trim() || "",
+            from: selectLang.slText,
+            lang: selectLang.slTranslate,
+            text_translate: outputArr[idx],
+          })),
+        })
+      );
+  };
+
   useEffect(() => {
     dispatch(detailProjectImgApi(projectId));
   }, [dispatch, projectId]);
   useEffect(() => {
     dispatch(getLanguage());
   }, [dispatch]);
-  useEffect(() => {
-    dispatch(
-      translateApi({
-        text: input,
-        from: selectLang.slText,
-        lang: selectLang.slTranslate,
-        project_id: currentProject?.id,
-      })
-    );
-  }, [
-    dispatch,
-    currentProject?.id,
-    input,
-    selectLang.slText,
-    selectLang.slTranslate,
-  ]);
+
   return (
     <div className="detailImageProject flex flex-col gap-3">
       <div>
@@ -105,10 +123,21 @@ const DetailImageProject = () => {
           ))}
         </div>
       </div>
+      <div className="detailImageProject__control">
+        <button onClick={handleClickSave}>Lưu</button>
+      </div>
       <div className="flex gap-3 items-start">
         <div className="detailImageProject__box">
           <div className="detailImageProject__input">
-            <label htmlFor="text">Nhập nội dung text:</label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="text">Nhập nội dung text:</label>
+
+              <AudioPlayer
+                translationLoading={translationLoading}
+                lang={selectLang.slText}
+                text={input}
+              />
+            </div>
             <select
               name="slText"
               value={selectLang.slText}
@@ -131,7 +160,14 @@ const DetailImageProject = () => {
         </div>
         <div className="detailImageProject__box">
           <div className="detailImageProject__input">
-            <label htmlFor="translate">Nội dung translate text:</label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="translate">Nội dung translate text:</label>
+              <AudioPlayer
+                translationLoading={translationLoading}
+                lang={selectLang.slTranslate}
+                text={output?.translated_text ?? ""}
+              />
+            </div>
             <select
               name="slTranslate"
               value={selectLang.slTranslate}

@@ -53,3 +53,28 @@ export const deleteProjectImgApi = (id) => async (dispatch) => {
     dispatch(projectImgAction.deleteProjectImgFail(e?.response?.data));
   }
 };
+export const createContentAndImage = (info) => async (dispatch) => {
+  dispatch(projectDetailImgAction.createContentImg());
+  try {
+    const formData = new FormData();
+
+    if (info.images.length > 0) {
+      for (let file of info.images) {
+        formData.append("images", file);
+      }
+    }
+    formData.append("project_id", info.project_id);
+    formData.append("contents", JSON.stringify(info.contents));
+
+    const res = await http.post(`project_data`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: getCookie("authToken"),
+      },
+    });
+    console.log(res.data);
+    dispatch(projectDetailImgAction.createContentImgSuccess(res.data));
+  } catch (e) {
+    dispatch(projectDetailImgAction.createContentImgFail(e));
+  }
+};

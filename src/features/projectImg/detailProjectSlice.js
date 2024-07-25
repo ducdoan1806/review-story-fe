@@ -22,6 +22,21 @@ const projectDetailImgSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    createContentImg: (state) => {
+      state.loading = true;
+    },
+    createContentImgSuccess: (state, action) => {
+      state.loading = false;
+      action.payload?.contents.forEach((item) => {
+        state.currentProject.contents.push(item);
+      });
+
+      state.error = null;
+    },
+    createContentImgFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 const projectDetailImgReducer = projectDetailImgSlice.reducer;
