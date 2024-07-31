@@ -9,6 +9,8 @@ import { useLocation } from "react-router-dom";
 import { getLanguage, translateApi } from "../features/translation/api";
 import { useDebounced } from "../utils/utils";
 import AudioPlayer from "../components/AudioPlayer";
+import { faDownload, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const DetailImageProject = () => {
   const [images, setImages] = useState([]);
@@ -84,16 +86,31 @@ const DetailImageProject = () => {
   useEffect(() => {
     dispatch(getLanguage());
   }, [dispatch]);
-
+  useEffect(() => {
+    if (currentProject) {
+      setImages(currentProject.images.map((item) => item.file_path));
+      setPreviewImages(currentProject.images.map((item) => item.file_path));
+    }
+  }, [currentProject]);
   return (
     <div className="detailImageProject flex flex-col gap-3">
-      <div>
-        <span className="text-lg font-semibold mb-1 block">
-          {currentProject?.title || "--"}
-        </span>
-        {currentProject?.description && (
-          <p>{currentProject?.description || "--"}</p>
-        )}
+      <div className="flex justify-between items-center">
+        <div>
+          <span className="text-lg font-semibold mb-1 block">
+            {currentProject?.title || "--"}
+          </span>
+          {currentProject?.description && (
+            <p>{currentProject?.description || "--"}</p>
+          )}
+        </div>
+        <div className="detailImageProject__control">
+          <button onClick={handleClickSave}>
+            Lưu <FontAwesomeIcon icon={faFloppyDisk} />
+          </button>
+          <button>
+            Export video <FontAwesomeIcon icon={faDownload} />
+          </button>
+        </div>
       </div>
       <div className="detailImageProject__box">
         <div className="text-base mb-3 font-semibold">Tải ảnh:</div>
@@ -123,9 +140,7 @@ const DetailImageProject = () => {
           ))}
         </div>
       </div>
-      <div className="detailImageProject__control">
-        <button onClick={handleClickSave}>Lưu</button>
-      </div>
+
       <div className="flex gap-3 items-start">
         <div className="detailImageProject__box">
           <div className="detailImageProject__input">
