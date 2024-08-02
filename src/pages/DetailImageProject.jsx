@@ -93,15 +93,18 @@ const DetailImageProject = () => {
     ]);
 
     videos.forEach((video, index) => {
-      const videoBlob = new Blob([video.data], { type: "video/mp4" });
-      const videoURL = URL.createObjectURL(videoBlob);
-      const link = document.createElement("a");
-      link.href = videoURL;
-      link.download = `video${index + 1}.mp4`; // Tên file khi tải về
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (video?.data) {
+        const videoBlob = new Blob([video.data], { type: "video/mp4" });
+        const videoURL = URL.createObjectURL(videoBlob);
+        const link = document.createElement("a");
+        link.href = videoURL;
+        link.download = `video${index + 1}.mp4`; // Tên file khi tải về
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     });
+
     setDownLoadLoading(false);
   };
   useEffect(() => {

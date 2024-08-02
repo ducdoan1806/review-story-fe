@@ -17,7 +17,7 @@ export const createVideoApi = async (info) => {
     }
     formData.append("voice_type", info.voice_type);
 
-    const res = axios.post(`${API_URL}create_video`, formData, {
+    const res = await axios.post(`${API_URL}create_video`, formData, {
       responseType: "blob",
       headers: {
         "Content-Type": "multipart/form-data",
