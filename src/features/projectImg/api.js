@@ -72,7 +72,7 @@ export const createContentAndImage = (info) => async (dispatch) => {
         Authorization: getCookie("authToken"),
       },
     });
-    console.log(res.data);
+
     dispatch(projectDetailImgAction.createContentImgSuccess(res.data));
   } catch (e) {
     dispatch(projectDetailImgAction.createContentImgFail(e));

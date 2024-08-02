@@ -11,11 +11,15 @@ import { useDebounced } from "../utils/utils";
 import AudioPlayer from "../components/AudioPlayer";
 import { faDownload, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { createVideoApi } from "../features/video/api";
+import SpinLoading from "../components/SpinLoading";
 
 const DetailImageProject = () => {
+  const [downloadLoading, setDownLoadLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [input, setInput] = useState("");
+
   const [selectLang, setSelectLang] = useState({
     slText: "en",
     slTranslate: "vi",
@@ -52,9 +56,11 @@ const DetailImageProject = () => {
   };
   const handleChangeImages = (e) => {
     const files = Array.from(e.target.files);
-    setImages(files);
-    const previews = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(previews);
+    setImages([...files, ...images]);
+    const previews = files.map((file) => ({
+      file_path: URL.createObjectURL(file),
+    }));
+    setPreviewImages([...previews, ...previewImages]);
   };
   const handleRemoveImage = (index) => {
     const updatedFiles = images.filter((_, i) => i !== index);
@@ -63,8 +69,8 @@ const DetailImageProject = () => {
     setPreviewImages(updatedPreviews);
   };
   const handleClickSave = () => {
-    const inputArr = input.split(" // ");
-    const outputArr = output?.translated_text.split(" // ");
+    const inputArr = input.split("//");
+    const outputArr = output?.translated_text.split("//");
     if (input && output && selectLang?.slText && selectLang?.slTranslate)
       dispatch(
         createContentAndImage({
@@ -79,19 +85,46 @@ const DetailImageProject = () => {
         })
       );
   };
+  const handleExportVideo = async () => {
+    setDownLoadLoading(true);
+    const videos = await Promise.all([
+      createVideoApi({
+        voice_type: selectLang.slText,
+        texts: input.split("//"),
+        images,
+      }),
+      createVideoApi({
+        voice_type: selectLang.slTranslate,
+        texts: output?.translated_text.split("//"),
+        images,
+      }),
+    ]);
 
+    videos.forEach((video, index) => {
+      const videoBlob = new Blob([video.data], { type: "video/mp4" });
+      const videoURL = URL.createObjectURL(videoBlob);
+      const link = document.createElement("a");
+      link.href = videoURL;
+      link.download = `video${index + 1}.mp4`; // Tên file khi tải về
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+    setDownLoadLoading(false);
+  };
   useEffect(() => {
     dispatch(detailProjectImgApi(projectId));
-  }, [dispatch, projectId]);
-  useEffect(() => {
     dispatch(getLanguage());
-  }, [dispatch]);
+  }, [dispatch, projectId]);
+
   useEffect(() => {
-    if (currentProject) {
-      setImages(currentProject.images.map((item) => item.file_path));
-      setPreviewImages(currentProject.images.map((item) => item.file_path));
+    if (currentProject?.images && projectId) {
+      setImages([...currentProject.images]);
+      setPreviewImages([...currentProject.images]);
     }
-  }, [currentProject]);
+    if (currentProject?.contents)
+      setInput(currentProject?.contents.map((item) => item.text).join("//"));
+  }, [currentProject, projectId]);
   return (
     <div className="detailImageProject flex flex-col gap-3">
       <div className="flex justify-between items-center">
@@ -107,8 +140,19 @@ const DetailImageProject = () => {
           <button onClick={handleClickSave}>
             Lưu <FontAwesomeIcon icon={faFloppyDisk} />
           </button>
-          <button>
-            Export video <FontAwesomeIcon icon={faDownload} />
+          <button
+            onClick={() => {
+              !downloadLoading && handleExportVideo();
+            }}
+          >
+            Export video{" "}
+            {downloadLoading ? (
+              <div className="detailImageProject__loading">
+                <SpinLoading background={"#fff"} size={20} />
+              </div>
+            ) : (
+              <FontAwesomeIcon icon={faDownload} />
+            )}
           </button>
         </div>
       </div>
@@ -127,7 +171,7 @@ const DetailImageProject = () => {
                 className="block"
                 width={200}
                 height={200}
-                src={src}
+                src={src?.file_path}
                 alt={`Preview ${index}`}
               />
               <button
@@ -157,6 +201,7 @@ const DetailImageProject = () => {
               name="slText"
               value={selectLang.slText}
               onChange={handleChangeLang}
+              disabled={downloadLoading}
             >
               {loadedLanguages &&
                 languages.map((item) => (
@@ -170,6 +215,8 @@ const DetailImageProject = () => {
               id="text"
               rows={5}
               onChange={handleChangeInput}
+              defaultValue={input}
+              disabled={downloadLoading}
             ></textarea>
           </div>
         </div>
@@ -187,6 +234,7 @@ const DetailImageProject = () => {
               name="slTranslate"
               value={selectLang.slTranslate}
               onChange={handleChangeLang}
+              disabled={downloadLoading}
             >
               {loadedLanguages &&
                 languages.map((item) => (
@@ -200,6 +248,7 @@ const DetailImageProject = () => {
               id="translate"
               rows={5}
               defaultValue={output?.translated_text ?? ""}
+              disabled={downloadLoading}
             ></textarea>
           </div>
         </div>

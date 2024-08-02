@@ -5,6 +5,8 @@ import { API_URL } from "../app/http";
 import SpinLoading from "./SpinLoading";
 
 const AudioPlayer = ({ lang, text, translationLoading }) => {
+  const textArr = text.split(" // ");
+  text = textArr.join(" ");
   const [voice, setVoice] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
