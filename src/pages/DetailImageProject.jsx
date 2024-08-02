@@ -38,14 +38,6 @@ const DetailImageProject = () => {
 
   const inputDebounced = useDebounced((input) => {
     setInput(input.trim());
-    dispatch(
-      translateApi({
-        text: input.trim() || "",
-        from: selectLang.slText,
-        lang: selectLang.slTranslate,
-        project_id: currentProject?.id,
-      })
-    );
   }, 700);
   const handleChangeInput = (e) => {
     inputDebounced(e.target.value);
@@ -125,6 +117,22 @@ const DetailImageProject = () => {
     if (currentProject?.contents)
       setInput(currentProject?.contents.map((item) => item.text).join("//"));
   }, [currentProject, projectId]);
+  useEffect(() => {
+    dispatch(
+      translateApi({
+        text: input.trim() || "",
+        from: selectLang.slText,
+        lang: selectLang.slTranslate,
+        project_id: currentProject?.id,
+      })
+    );
+  }, [
+    dispatch,
+    input,
+    currentProject?.id,
+    selectLang.slText,
+    selectLang.slTranslate,
+  ]);
   return (
     <div className="detailImageProject flex flex-col gap-3">
       <div className="flex justify-between items-center">
@@ -247,8 +255,9 @@ const DetailImageProject = () => {
               name="translate"
               id="translate"
               rows={5}
-              defaultValue={output?.translated_text ?? ""}
-              disabled={downloadLoading}
+              disabled
+              value={output?.translated_text ?? ""}
+              onChange={() => {}}
             ></textarea>
           </div>
         </div>

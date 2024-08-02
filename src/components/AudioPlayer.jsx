@@ -30,7 +30,7 @@ const AudioPlayer = ({ lang, text, translationLoading }) => {
   }, [lang, text]);
   return (
     <div className="audio-player" style={{ width: 200, height: 30 }}>
-      {translationLoading && loading ? (
+      {translationLoading || loading ? (
         <div className="flex justify-end">
           <SpinLoading />
         </div>
