@@ -23,3 +23,7 @@
     @apply flex items-center gap-2 px-5 py-2 text-white rounded;
   }
 }
+.detailImage__list {
+  width: calc(100vw - 304px);
+  @apply flex gap-2 mt-2 overflow-auto;
+}

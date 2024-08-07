@@ -4,6 +4,7 @@ const initialState = {
   loaded: false,
   loading: false,
   currentProject: null,
+  message: "",
   error: null,
 };
 const projectDetailImgSlice = createSlice({
@@ -27,10 +28,7 @@ const projectDetailImgSlice = createSlice({
     },
     createContentImgSuccess: (state, action) => {
       state.loading = false;
-      action.payload?.contents.forEach((item) => {
-        state.currentProject.contents.push(item);
-      });
-
+      state.message = action.payload?.message;
       state.error = null;
     },
     createContentImgFail: (state, action) => {

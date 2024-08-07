@@ -5,11 +5,10 @@ import { API_URL } from "../../app/http";
 export const createVideoApi = async (info) => {
   try {
     const formData = new FormData();
-    console.log("info: ", info);
 
     if (info.images.length > 0 && info.texts.length > 0) {
       for (let file of info.images) {
-        formData.append("images", file);
+        formData.append("images", file.img_data);
       }
       for (let text of info.texts) {
         formData.append("texts", text);

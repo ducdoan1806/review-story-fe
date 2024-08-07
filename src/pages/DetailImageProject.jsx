@@ -13,13 +13,13 @@ import { faDownload, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createVideoApi } from "../features/video/api";
 import SpinLoading from "../components/SpinLoading";
+import Notification from "../components/Notification";
 
 const DetailImageProject = () => {
   const [downloadLoading, setDownLoadLoading] = useState(false);
+  const [notificaton, setNotification] = useState({ text: "", isError: false });
   const [images, setImages] = useState([]);
-  const [previewImages, setPreviewImages] = useState([]);
   const [input, setInput] = useState("");
-
   const [selectLang, setSelectLang] = useState({
     slText: "en",
     slTranslate: "vi",
@@ -27,14 +27,15 @@ const DetailImageProject = () => {
   const location = useLocation();
   const projectId =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
-  const { currentProject } = useSelector((state) => state.projectDetailImg);
+  const { currentProject, loading: currentProjectLoading } = useSelector(
+    (state) => state.projectDetailImg
+  );
+
   const { result: output, loading: translationLoading } = useSelector(
     (state) => state.translation
   );
 
-  const { languages, loaded: loadedLanguages } = useSelector(
-    (state) => state.language
-  );
+  const { languages } = useSelector((state) => state.language);
 
   const inputDebounced = useDebounced((input) => {
     setInput(input.trim());
@@ -48,48 +49,48 @@ const DetailImageProject = () => {
   };
   const handleChangeImages = (e) => {
     const files = Array.from(e.target.files);
-    setImages([...files, ...images]);
-    const previews = files.map((file) => ({
-      file_path: URL.createObjectURL(file),
-    }));
-    setPreviewImages([...previews, ...previewImages]);
+    const base64Strings = [];
+    const fileReaders = [];
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        base64Strings.push({ img_data: reader.result });
+        setImages([...images, ...base64Strings]);
+      };
+      reader.readAsDataURL(file);
+      fileReaders.push(reader);
+    });
   };
+
   const handleRemoveImage = (index) => {
     const updatedFiles = images.filter((_, i) => i !== index);
-    const updatedPreviews = previewImages.filter((_, i) => i !== index);
     setImages(updatedFiles);
-    setPreviewImages(updatedPreviews);
   };
   const handleClickSave = () => {
-    const inputArr = input.split("//");
-    const outputArr = output?.translated_text.split("//");
     if (input && output && selectLang?.slText && selectLang?.slTranslate)
       dispatch(
         createContentAndImage({
           project_id: currentProject?.id,
           images,
-          contents: inputArr.map((item, idx) => ({
-            text: item.trim() || "",
-            from: selectLang.slText,
-            lang: selectLang.slTranslate,
-            text_translate: outputArr[idx],
-          })),
+          content: input.trim() || "",
+          lang: selectLang?.slText || "",
         })
       );
   };
   const handleExportVideo = async () => {
+    console.log(input);
     setDownLoadLoading(true);
     const videos = await Promise.all([
       createVideoApi({
         voice_type: selectLang.slText,
-        texts: input.split("//"),
+        texts: input.split("//").map((text) => text.trim()),
         images,
       }),
-      createVideoApi({
-        voice_type: selectLang.slTranslate,
-        texts: output?.translated_text.split("//"),
-        images,
-      }),
+      // createVideoApi({
+      //   voice_type: selectLang.slTranslate,
+      //   texts: output?.translated_text.split("//"),
+      //   images,
+      // }),
     ]);
 
     videos.forEach((video, index) => {
@@ -104,22 +105,30 @@ const DetailImageProject = () => {
         document.body.removeChild(link);
       }
     });
-
+    if (videos.every((video) => video?.data)) {
+      setNotification({ text: "Video đã tạo thành công", isError: false });
+    } else {
+      setNotification({ text: "Tạo video thất bại", isError: true });
+    }
     setDownLoadLoading(false);
   };
+
   useEffect(() => {
     dispatch(detailProjectImgApi(projectId));
     dispatch(getLanguage());
   }, [dispatch, projectId]);
-
   useEffect(() => {
-    if (currentProject?.images && projectId) {
-      setImages([...currentProject.images]);
-      setPreviewImages([...currentProject.images]);
+    if (currentProject?.images64) {
+      setImages(currentProject?.images64);
     }
-    if (currentProject?.contents)
-      setInput(currentProject?.contents.map((item) => item.text).join("//"));
-  }, [currentProject, projectId]);
+
+    setInput(currentProject?.content || "");
+
+    if (currentProject?.lang) {
+      setSelectLang({ slTranslate: "vi", slText: currentProject?.lang });
+    }
+  }, [currentProject?.images64, currentProject?.content, currentProject?.lang]);
+
   useEffect(() => {
     dispatch(
       translateApi({
@@ -148,8 +157,19 @@ const DetailImageProject = () => {
           )}
         </div>
         <div className="detailImageProject__control">
-          <button onClick={handleClickSave}>
-            Lưu <FontAwesomeIcon icon={faFloppyDisk} />
+          <button
+            onClick={() => {
+              !currentProjectLoading && handleClickSave();
+            }}
+          >
+            Lưu{" "}
+            {currentProjectLoading ? (
+              <div className="detailImageProject__loading">
+                <SpinLoading background={"#fff"} size={20} />
+              </div>
+            ) : (
+              <FontAwesomeIcon icon={faFloppyDisk} />
+            )}
           </button>
           <button
             onClick={() => {
@@ -175,14 +195,17 @@ const DetailImageProject = () => {
           accept="image/*"
           onChange={handleChangeImages}
         />
-        <div className="flex gap-2 mt-2 overflow-x-auto">
-          {previewImages.map((src, index) => (
-            <div className="relative w-28 overflow-hidden" key={index}>
+        <div className="detailImage__list">
+          {images.map((src, index) => (
+            <div
+              className="relative w-28 max-w-28 min-w-28 overflow-hidden"
+              key={index}
+            >
               <img
                 className="block"
                 width={200}
                 height={200}
-                src={src?.file_path}
+                src={src?.img_data}
                 alt={`Preview ${index}`}
               />
               <button
@@ -214,7 +237,7 @@ const DetailImageProject = () => {
               onChange={handleChangeLang}
               disabled={downloadLoading}
             >
-              {loadedLanguages &&
+              {languages?.length &&
                 languages.map((item) => (
                   <option key={item.code} value={item.code}>
                     {item.language}
@@ -247,7 +270,7 @@ const DetailImageProject = () => {
               onChange={handleChangeLang}
               disabled={downloadLoading}
             >
-              {loadedLanguages &&
+              {languages?.length &&
                 languages.map((item) => (
                   <option key={item.code} value={item.code}>
                     {item.language}
@@ -265,6 +288,15 @@ const DetailImageProject = () => {
           </div>
         </div>
       </div>
+      {notificaton?.text && (
+        <Notification
+          text={notificaton.text}
+          isError={notificaton.isError}
+          close={() => {
+            setNotification({ text: "", isError: false });
+          }}
+        />
+      )}
     </div>
   );
 };
