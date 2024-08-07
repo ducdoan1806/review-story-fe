@@ -1,11 +1,13 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import { API_URL } from "../app/http";
 import SpinLoading from "./SpinLoading";
 
 const AudioPlayer = ({ lang, text, translationLoading }) => {
-  const sourceRef = useRef(null);
+  const textArr = text.split(" // ");
+  text = textArr.join(" ");
+  const [voice, setVoice] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getVoice = async () => {
@@ -16,7 +18,7 @@ const AudioPlayer = ({ lang, text, translationLoading }) => {
           JSON.stringify({ lang, text }),
           { headers: { "Content-Type": "application/json" } }
         );
-        sourceRef.current.src = "data:audio/wav;base64," + res.data?.voice;
+        setVoice("data:audio/wav;base64," + res.data?.voice);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -28,16 +30,12 @@ const AudioPlayer = ({ lang, text, translationLoading }) => {
   }, [lang, text]);
   return (
     <div className="audio-player" style={{ width: 200, height: 30 }}>
-      {translationLoading && loading ? (
+      {translationLoading || loading ? (
         <div className="flex justify-end">
           <SpinLoading />
         </div>
       ) : (
-        <audio
-          ref={sourceRef}
-          style={{ width: 200, height: 30 }}
-          controls
-        ></audio>
+        <audio src={voice} style={{ width: 200, height: 30 }} controls></audio>
       )}
     </div>
   );

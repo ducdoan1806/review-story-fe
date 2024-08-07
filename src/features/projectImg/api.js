@@ -60,11 +60,12 @@ export const createContentAndImage = (info) => async (dispatch) => {
 
     if (info.images.length > 0) {
       for (let file of info.images) {
-        formData.append("images", file);
+        if (file) formData.append("image_arr", file?.img_data);
       }
     }
     formData.append("project_id", info.project_id);
-    formData.append("contents", JSON.stringify(info.contents));
+    formData.append("content", info.content);
+    formData.append("lang", info.lang);
 
     const res = await http.post(`project_data`, formData, {
       headers: {
@@ -72,7 +73,7 @@ export const createContentAndImage = (info) => async (dispatch) => {
         Authorization: getCookie("authToken"),
       },
     });
-    console.log(res.data);
+
     dispatch(projectDetailImgAction.createContentImgSuccess(res.data));
   } catch (e) {
     dispatch(projectDetailImgAction.createContentImgFail(e));

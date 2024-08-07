@@ -5,7 +5,12 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { createProjectApi } from "../features/projectImg/api";
 const CreateProject = ({ handleOpen }) => {
-  const [project, setProject] = useState({ title: "", description: "" });
+  const [project, setProject] = useState({
+    title: "",
+    description: "",
+    lang: "",
+    content: "",
+  });
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.projectImg);
 
