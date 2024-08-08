@@ -86,11 +86,11 @@ const DetailImageProject = () => {
         texts: input.split("//").map((text) => text.trim()),
         images,
       }),
-      // createVideoApi({
-      //   voice_type: selectLang.slTranslate,
-      //   texts: output?.translated_text.split("//"),
-      //   images,
-      // }),
+      createVideoApi({
+        voice_type: selectLang.slTranslate,
+        texts: output?.translated_text.split("//"),
+        images,
+      }),
     ]);
 
     videos.forEach((video, index) => {
