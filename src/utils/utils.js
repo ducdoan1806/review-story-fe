@@ -39,7 +39,8 @@ export const clearCookie = () => {
   });
 };
 export const formatDate = (date) => {
-  if (!(date instanceof Date) || isNaN(date)) return date;
+  if (!(date instanceof Date) || isNaN(date) || date === "Invalid Date")
+    return false;
   return date.toISOString().split("T")[0];
 };
 export const useDebounced = (callback, delay) => {

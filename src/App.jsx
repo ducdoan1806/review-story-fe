@@ -7,6 +7,8 @@ import Dashboard from "./pages/Dashboard";
 import ImageProject from "./pages/ImageProject";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DetailImageProject from "./pages/DetailImageProject";
+import VideoProject from "./pages/VideoProject";
+import DetailVideoProject from "./pages/DetailVideoProject";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/picture-project" element={<ImageProject />} />
         <Route path="/picture-project/:id" element={<DetailImageProject />} />
+        <Route path="/video-project" element={<VideoProject />} />
+        <Route path="/video-project/:id" element={<DetailVideoProject />} />
       </Route>
       <Route path="/auth" element={<Auth />}>
         <Route path="/auth/login" element={<Login />} />

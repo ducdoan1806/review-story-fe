@@ -2,12 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import "../assets/css/sidebar.css";
 import logo from "../assets/images/logo-dark.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, faImage } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faImage, faVideo } from "@fortawesome/free-solid-svg-icons";
 
 const sidebar = [
   { name: "Trang chủ", path: "/", icon: faHouse },
   { name: "Dự án hình ảnh", path: "/picture-project", icon: faImage },
-  // { name: "Dự án video", path: "/video-project", icon: faVideo },
+  { name: "Dự án video", path: "/video-project", icon: faVideo },
 ];
 const Sidebar = () => {
   const location = useLocation();

@@ -38,7 +38,7 @@ const Header = () => {
               + Dự án hình ảnh
             </Link>
             <Link
-              to={"/"}
+              to={"/video-project"}
               className="dropdown__item"
               onClick={() => {
                 setIsDrop(false);
