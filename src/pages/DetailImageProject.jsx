@@ -27,10 +27,11 @@ const DetailImageProject = () => {
   const location = useLocation();
   const projectId =
     location.pathname.split("/")[location.pathname.split("/").length - 1];
-  const { currentProject, loading: currentProjectLoading } = useSelector(
-    (state) => state.projectDetailImg
-  );
-
+  const {
+    currentProject,
+    loading: currentProjectLoading,
+    message: projectMessage,
+  } = useSelector((state) => state.projectDetailImg);
   const { result: output, loading: translationLoading } = useSelector(
     (state) => state.translation
   );
@@ -76,9 +77,13 @@ const DetailImageProject = () => {
           lang: selectLang?.slText || "",
         })
       );
+    if (projectMessage === "Success") {
+      setNotification({ text: "Lưu thành công", isError: false });
+    } else {
+      setNotification({ text: "Lưu thất bại", isError: true });
+    }
   };
   const handleExportVideo = async () => {
-    console.log(input);
     setDownLoadLoading(true);
     const videos = await Promise.all([
       createVideoApi({
